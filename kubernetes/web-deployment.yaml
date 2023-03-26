@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -19,7 +19,7 @@ spec:
         run: web
     spec:
       containers:
-      - image: gcr.io/poetic-genius-233804/metrics-web:latest
+      - image: gcr.io/busviz/metrics-web:latest
         imagePullPolicy: IfNotPresent
         name: web
         resources:

@@ -1,4 +1,4 @@
-apiVersion: batch/v1beta1
+apiVersion: apps/v1
 kind: CronJob
 metadata:
   name: save-routes
@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
           - name: compute-new
-            image: gcr.io/poetic-genius-233804/metrics-flask:latest
+            image: gcr.io/busviz/metrics-flask:latest
             imagePullPolicy: Always
             command: ["python",  "save_routes.py",  "--s3", "--timetables", "--scheduled-stats"]
             resources:

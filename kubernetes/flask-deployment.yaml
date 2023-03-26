@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -19,7 +19,7 @@ spec:
         run: flask
     spec:
       containers:
-      - image: gcr.io/poetic-genius-233804/metrics-flask:latest
+      - image: gcr.io/busviz/metrics-flask:latest
         imagePullPolicy: IfNotPresent
         name: flask
         resources:
