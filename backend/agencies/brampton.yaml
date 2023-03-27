@@ -1,6 +1,9 @@
 id: brampton
 gtfs_url: https://www.brampton.ca/EN/City-Hall/OpenGov/Open-Data-Catalogue/Documents/Google_Transit.zip
 timezone_id: America/Toronto
+default_day_start_hour: 3
+route_id_gtfs_field: route_short_name
+stop_id_gtfs_field: stop_code
 js_properties:
   title: Brampton Transit
   initialMapCenter: { lat: 45.525, lng: -122.677 }
