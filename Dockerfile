@@ -7,14 +7,14 @@ COPY ./frontend /app/frontend
 WORKDIR /app/frontend
 CMD ["npm","start"]
 
-FROM python:3.7.2-slim-stretch AS flask-dev
+FROM python:3.7.16-slim-bullseye AS flask-dev
 RUN mkdir -p /app/backend && \
     apt-get update && \
     apt-get install -y curl nano less sudo && \
     apt-get install -y git \
     build-essential \
     gdal-bin \
-    libgdal-dev=3.6.2
+    libgdal-dev
 COPY ./backend/requirements.txt /app/backend/requirements.txt
 RUN pip install -r /app/backend/requirements.txt
 COPY ./backend /app/backend
