@@ -1,6 +1,5 @@
 id: brampton
 gtfs_url: https://www.brampton.ca/EN/City-Hall/OpenGov/Open-Data-Catalogue/Documents/Google_Transit.zip
-gtfs_agency_id: Brampton
 timezone_id: America/Toronto
 js_properties:
   title: Brampton Transit

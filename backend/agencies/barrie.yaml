@@ -1,6 +1,5 @@
 id: barrie
 gtfs_url: http://www.myridebarrie.ca/gtfs/google_transit.zip
-gtfs_agency_id: Barrie
 timezone_id: America/Toronto
 js_properties:
   title: Barrie Transit
