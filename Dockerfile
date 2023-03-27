@@ -14,7 +14,7 @@ RUN mkdir -p /app/backend && \
     apt-get install -y git \
     build-essential \
     gdal-bin \
-    libgdal-dev=3.6.2+dfsg-1
+    libgdal-dev=3.6.2
 COPY ./backend/requirements.txt /app/backend/requirements.txt
 RUN pip install -r /app/backend/requirements.txt
 COPY ./backend /app/backend
