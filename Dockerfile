@@ -13,7 +13,8 @@ RUN mkdir -p /app/backend && \
     apt-get install -y curl nano less sudo && \
     apt-get install -y git \
     build-essential \
-    gdal-bin
+    gdal-bin \
+    libgdal-dev
 COPY ./backend/requirements.txt /app/backend/requirements.txt
 RUN pip install -r /app/backend/requirements.txt
 COPY ./backend /app/backend
