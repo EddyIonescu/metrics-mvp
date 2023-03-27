@@ -66,6 +66,8 @@ class ArrivalHistory:
 
                     data.append((v, timestamp, departure_time, s, did, dist, trip))
 
+                    # v = vehicle ID, t = arrival time, e = departure time, d = distance, i = trip ID
+
         if stop_id is not None:
             if stop_id in stops:
                 add_stop(stop_id)
