@@ -849,7 +849,7 @@ class GtfsScraper:
 
         xy_geometry = shapely.ops.transform(project_xy, geometry)
 
-        shape_lon_lat = np.array(geometry).T
+        shape_lon_lat = np.array(geometry.coords).T
         shape_lon = shape_lon_lat[0]
         shape_lat = shape_lon_lat[1]
 
