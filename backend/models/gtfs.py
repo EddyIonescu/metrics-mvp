@@ -1070,7 +1070,7 @@ class GtfsScraper:
             return route_data['title']
         return sorted(routes_data, key=get_sort_key)
 
-    def save_routes(self, save_to_s3, d, included_stop_ids):
+    def save_routes(self, save_to_s3, d, included_route_ids):
         agency = self.agency
         agency_id = agency.id
         routes_df = self.get_gtfs_routes()
@@ -1082,10 +1082,11 @@ class GtfsScraper:
             ))
             return
 
-        # Only return routes that we want to include
-        routes_df = routes_df[
-            routes_df[agency.route_id_gtfs_field].isin(included_stop_ids)
-        ]
+        # Only return routes that we want to include.
+        if len(included_route_ids) > 0:
+            routes_df = routes_df[
+                routes_df[agency.route_id_gtfs_field].isin(included_route_ids)
+            ]
 
         routes_data = [
             self.get_route_data(route)

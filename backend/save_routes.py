@@ -62,10 +62,10 @@ if __name__ == '__main__':
 
     for agency in agencies:
         scraper = gtfs.GtfsScraper(agency)
-        include_route_ids = []
+        included_route_ids = []
         if routes is not None:
-            include_route_ids = routes.split(',')
-        scraper.save_routes(save_to_s3, d, include_route_ids)
+            included_route_ids = routes.split(',')
+        scraper.save_routes(save_to_s3, d, included_route_ids)
 
         if args.timetables:
             timetables_updated = scraper.save_timetables(save_to_s3=save_to_s3, skip_existing=True)
