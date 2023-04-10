@@ -34,6 +34,9 @@ class Agency:
         # allow OpenTransit's stop id to be another field besides GTFS stop_id, e.g. stop_code.
         self.stop_id_gtfs_field = conf.get("stop_id_gtfs_field", "stop_id")
 
+        # allow requests to TrynAPI to use the GTFS route_id instead of the OpenTransit route_id.
+        self.use_route_gtfs_id = conf.get("use_route_gtfs_id", False)
+
         # by default, start each "day" at 3 AM local time so midnight-3am buses are associated with previous day
         self.default_day_start_hour = conf.get('default_day_start_hour', 3)
         self.custom_day_start_hours = conf.get('custom_day_start_hours', [])
