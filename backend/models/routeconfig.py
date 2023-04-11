@@ -174,7 +174,10 @@ def get_route_list(agency_id, version=DefaultVersion):
     return route_list_from_data(data)
 
 def get_route_config(agency_id, route_id, version=DefaultVersion):
+    use_gtfs_route_id = config.get_agency(agency_id).use_route_gtfs_id
     for route in get_route_list(agency_id, version):
+        if use_gtfs_route_id and route.gtfs_route_id == route_id:
+            return route
         if route.id == route_id:
             return route
     return None
