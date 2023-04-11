@@ -26,7 +26,6 @@ class CachedState:
                 cache_path,
                 dtype={
                     'vid': str,
-                    'label': str,
                     'did': str,
                 },
                 float_precision='high', # keep precision for rounding lat/lon
@@ -232,7 +231,7 @@ def get_chunk_state(
 
 # Properties of each vehicle as returned from tryn-api,
 # used for writing and reading chunk states to and from CSV files
-vehicle_keys = ['vid', 'lat', 'lon', 'did', 'secsSinceReport', 'label']
+vehicle_keys = ['vid', 'lat', 'lon', 'did', 'secsSinceReport']
 
 def write_csv_header(path):
     header_keys = ['timestamp'] + vehicle_keys
