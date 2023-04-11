@@ -37,6 +37,9 @@ class Agency:
         # allow requests to TrynAPI to use the GTFS route_id instead of the OpenTransit route_id.
         self.use_route_gtfs_id = conf.get("use_route_gtfs_id", False)
 
+        # use the label field instead of vid for vehicle IDs when reading from Tryn API.
+        self.use_vehicle_label = conf.get("use_vehicle_label", False)
+
         # by default, start each "day" at 3 AM local time so midnight-3am buses are associated with previous day
         self.default_day_start_hour = conf.get('default_day_start_hour', 3)
         self.custom_day_start_hours = conf.get('custom_day_start_hours', [])

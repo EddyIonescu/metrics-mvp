@@ -26,6 +26,7 @@ class CachedState:
                 cache_path,
                 dtype={
                     'vid': str,
+                    'label': str,
                     'did': str,
                 },
                 float_precision='high', # keep precision for rounding lat/lon

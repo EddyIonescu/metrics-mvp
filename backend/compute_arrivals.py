@@ -31,18 +31,21 @@ def compute_arrivals_for_date_and_start_hour(d: date, start_hour: int,
             continue
 
         route_config = agency.get_route_config(route_id)
+        # Always save route data with the OpenTransit route ID, rather than the GTFS one that
+        # had to be consistent with the GTFS-RT data.
+        opentransit_route_id = route_config.id
 
         t1 = time.time()
 
         arrivals_df = eclipses.find_arrivals(agency, route_state, route_config, d)
 
-        history = arrival_history.from_data_frame(agency.id, route_id, arrivals_df, start_time, end_time)
+        history = arrival_history.from_data_frame(agency.id, opentransit_route_id, arrivals_df, start_time, end_time)
 
-        print(f'{route_id}: {round(time.time()-t1,1)} saving arrival history')
+        print(f'{opentransit_route_id}: {round(time.time()-t1,1)} saving arrival history')
 
         arrival_history.save_for_date(history, d, save_to_s3)
 
-        print(f'{route_id}: {round(time.time()-t1,2)} done')
+        print(f'{opentransit_route_id}: {round(time.time()-t1,2)} done')
 
 def compute_arrivals(d: date, agency: config.Agency, route_ids: list, save_to_s3=True):
 
