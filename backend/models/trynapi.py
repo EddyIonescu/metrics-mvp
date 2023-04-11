@@ -232,7 +232,7 @@ def get_chunk_state(
 
 # Properties of each vehicle as returned from tryn-api,
 # used for writing and reading chunk states to and from CSV files
-vehicle_keys = ['vid', 'lat', 'lon', 'did', 'secsSinceReport']
+vehicle_keys = ['vid', 'lat', 'lon', 'did', 'secsSinceReport', 'label']
 
 def write_csv_header(path):
     header_keys = ['timestamp'] + vehicle_keys
@@ -281,6 +281,25 @@ def get_state_raw(agency_id, start_time, end_time, route_ids):
         }}
       }}
     }}"""
+
+    if config.use_vehicle_label:
+        # Same query but renaming label to vid.
+        query = f"""{{
+            {params} {{
+                agencyId
+                startTime
+                routes {{
+                    routeId
+                    states {{
+                        timestamp
+                        vehicles {{ 
+                            vid: label 
+                            lat lon did secsSinceReport
+                        }}
+                    }}
+                }}
+            }}
+        }}""" 
 
     trynapi_url = config.trynapi_url
 
