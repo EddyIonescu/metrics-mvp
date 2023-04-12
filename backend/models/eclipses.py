@@ -367,7 +367,7 @@ def get_possible_arrivals_for_stop(buses: pd.DataFrame, stop_id: str,
 def make_arrivals_frame(rows: list) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=[
         'VID','TIME','DEPARTURE_TIME','DIST',
-        'SID','DID','STOP_INDEX','OBS_GROUP','TRIP'
+        'SID','DID','STOP_INDEX','OBS_GROUP','TRIP','TRIP_ID'
     ])
 
 def clean_arrivals(possible_arrivals: pd.DataFrame, buses: pd.DataFrame, route_config: routeconfig.RouteConfig) -> tuple:
