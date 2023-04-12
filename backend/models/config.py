@@ -40,6 +40,9 @@ class Agency:
         # use the label field instead of vid for vehicle IDs when reading from Tryn API.
         self.use_vehicle_label = conf.get("use_vehicle_label", False)
 
+        # use the "tripId" field that trynAPI returns as to have the GTFS trip ID stored in the arrival history.
+        self.has_trip_id = conf.get("has_trip_id", False)
+
         # by default, start each "day" at 3 AM local time so midnight-3am buses are associated with previous day
         self.default_day_start_hour = conf.get('default_day_start_hour', 3)
         self.custom_day_start_hours = conf.get('custom_day_start_hours', [])

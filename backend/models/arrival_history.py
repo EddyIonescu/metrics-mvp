@@ -38,8 +38,9 @@ class ArrivalHistory:
 
         has_dist = has_departure_time = self.version and self.version[1] >= '3'
         has_trip = self.version and self.version[1] >= '4'
+        has_trip_id = config.has_trip_id(self.agency_id)
 
-        columns = ("VID", "TIME", "DEPARTURE_TIME", "SID", "DID", "DIST", "TRIP")
+        columns = ("VID", "TIME", "DEPARTURE_TIME", "SID", "DID", "DIST", "TRIP", "TRIP_ID")
 
         def add_stop(s):
             stop_info = stops[s]
@@ -64,9 +65,11 @@ class ArrivalHistory:
 
                     trip = arrival['i'] if has_trip else -1
 
-                    data.append((v, timestamp, departure_time, s, did, dist, trip))
+                    trip_id = arrival['tr'] if has_trip_id else -1
 
-                    # v = vehicle ID, t = arrival time, e = departure time, d = distance, i = trip ID
+                    data.append((v, timestamp, departure_time, s, did, dist, trip, trip_id))
+
+                    # v = vehicle ID, t = arrival time, e = departure time, d = distance, i = trip ID, tr = GTFS trip ID
 
         if stop_id is not None:
             if stop_id in stops:
@@ -132,7 +135,14 @@ def make_stops_data(arrivals: pd.DataFrame):
                 arrivals_data = []
 
                 for row in stop_direction_arrivals.itertuples():
-                    arrivals_data.append({'t': row.TIME, 'e': row.DEPARTURE_TIME, 'd': round(row.DIST), 'v': row.VID, 'i': row.TRIP})
+                    arrivals_data.append({
+                        't': row.TIME,
+                        'e': row.DEPARTURE_TIME,
+                        'd': round(row.DIST),
+                        'v': row.VID,
+                        'i': row.TRIP,
+                        'tr': row.TRIP_ID,
+                    })
 
                 stop_directions_data[stop_direction_id] = arrivals_data
 

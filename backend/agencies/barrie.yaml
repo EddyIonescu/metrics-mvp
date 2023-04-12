@@ -6,6 +6,7 @@ route_id_gtfs_field: route_short_name
 stop_id_gtfs_field: stop_code
 use_vehicle_label: true
 use_route_gtfs_id: true
+has_trip_ids: true
 js_properties:
   title: Barrie Transit
   initialMapCenter: { lat: 45.525, lng: -122.677 }

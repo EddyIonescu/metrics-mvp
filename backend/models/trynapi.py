@@ -27,6 +27,7 @@ class CachedState:
                 dtype={
                     'vid': str,
                     'did': str,
+                    'tripId': str,
                 },
                 float_precision='high', # keep precision for rounding lat/lon
             ) \
@@ -36,9 +37,10 @@ class CachedState:
                 'vid': 'VID',
                 'did': 'DID',
                 'secsSinceReport': 'AGE',
-                'timestamp': 'RAW_TIME'
+                'timestamp': 'RAW_TIME',
+                'tripId': 'TRIP_ID',
             }) \
-            .reindex(['RAW_TIME', 'VID', 'LAT', 'LON', 'DID', 'AGE'], axis='columns')
+            .reindex(['RAW_TIME', 'VID', 'LAT', 'LON', 'DID', 'AGE', 'TRIP_ID'], axis='columns')
 
         # adjust each observation time for the number of seconds old the GPS location was when the observation was recorded
         buses['TIME'] = (buses['RAW_TIME'] - buses['AGE'].fillna(0)) #.astype(np.int64)
@@ -231,7 +233,7 @@ def get_chunk_state(
 
 # Properties of each vehicle as returned from tryn-api,
 # used for writing and reading chunk states to and from CSV files
-vehicle_keys = ['vid', 'lat', 'lon', 'did', 'secsSinceReport']
+vehicle_keys = ['vid', 'lat', 'lon', 'did', 'secsSinceReport', 'tripId']
 
 def write_csv_header(path):
     header_keys = ['timestamp'] + vehicle_keys
@@ -275,7 +277,7 @@ def get_state_raw(agency_id, start_time, end_time, route_ids):
           routeId
           states {{
             timestamp
-            vehicles {{ vid lat lon did secsSinceReport }}
+            vehicles {{ vid lat lon did secsSinceReport tripId }}
           }}
         }}
       }}
@@ -293,7 +295,7 @@ def get_state_raw(agency_id, start_time, end_time, route_ids):
                         timestamp
                         vehicles {{ 
                             vid: label 
-                            lat lon did secsSinceReport
+                            lat lon did secsSinceReport tripId
                         }}
                     }}
                 }}
