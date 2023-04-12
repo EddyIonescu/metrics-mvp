@@ -38,7 +38,7 @@ class ArrivalHistory:
 
         has_dist = has_departure_time = self.version and self.version[1] >= '3'
         has_trip = self.version and self.version[1] >= '4'
-        has_trip_id = config.has_trip_id(self.agency_id)
+        has_trip_id = config.get_agency(self.agency_id).has_trip_id
 
         columns = ("VID", "TIME", "DEPARTURE_TIME", "SID", "DID", "DIST", "TRIP", "TRIP_ID")
 

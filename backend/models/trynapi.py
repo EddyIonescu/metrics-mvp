@@ -283,7 +283,7 @@ def get_state_raw(agency_id, start_time, end_time, route_ids):
       }}
     }}"""
 
-    if config.use_vehicle_label:
+    if config.get_agency(agency_id).use_vehicle_label:
         # Same query but renaming label to vid.
         query = f"""{{
             {params} {{
