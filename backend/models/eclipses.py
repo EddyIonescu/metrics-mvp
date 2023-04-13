@@ -27,6 +27,7 @@ def resample_bus(bus: pd.DataFrame) -> pd.DataFrame:
             0,
             0,
             0,
+            '', # TRIP_ID
             # 0 # uncomment for debugging
         )
 
@@ -57,6 +58,7 @@ def resample_bus(bus: pd.DataFrame) -> pd.DataFrame:
         # looping by index over all of these arrays is more verbose than adding these columns to
         # the bus dataframe and looping using itertuples(), but this is much faster!
         vid = bus['VID'].values[0]
+        trip_id_values = bus['TRIP_ID'].values
         did_values = bus['DID'].values
 
         # obs_group is a counter associated with each resampled GPS observation
@@ -67,6 +69,7 @@ def resample_bus(bus: pd.DataFrame) -> pd.DataFrame:
 
         for i in range(0, len(time_values)):
             did_i = did_values[i]
+            trip_id_i = trip_id_values[i]
             num_samples_i = int(num_samples_values[i])
             dt_i = dt_values[i]
 
@@ -85,6 +88,7 @@ def resample_bus(bus: pd.DataFrame) -> pd.DataFrame:
                         prev_lon_i + lon_diff_i * frac,
                         prev_time_i + dt_i * frac,
                         obs_group,
+                        trip_id_i,
                         # 1 # uncomment for debugging
                     ))
             elif dt_i > 1800:
@@ -103,13 +107,14 @@ def resample_bus(bus: pd.DataFrame) -> pd.DataFrame:
                 lon_values[i],
                 time_values[i],
                 obs_group,
+                trip_id_i,
                 # 0 # uncomment for debugging
             ))
 
         new_rows.append(make_separator_row(vid))
 
     resampled_bus = pd.DataFrame(new_rows, columns=[
-        'VID','DID','LAT','LON','TIME','OBS_GROUP'
+        'VID','DID','LAT','LON','TIME','OBS_GROUP','TRIP_ID',
         # 'INTERP' # whether a sample was interpolated isn't needed by algorithm, but useful for debugging
     ])
     resampled_bus['TIME'] = resampled_bus['TIME'].astype(np.int64)
@@ -234,7 +239,7 @@ def find_arrivals(agency: config.Agency, route_state: pd.DataFrame, route_config
                 adjacent_stop_ids=adjacent_stop_ids,
                 radius=radius,
                 is_terminal=is_terminal,
-                use_reported_direction=False
+                use_reported_direction=False,
             )
 
             possible_arrivals_arr.append(possible_arrivals)
@@ -263,7 +268,7 @@ def get_possible_arrivals_for_stop(buses: pd.DataFrame, stop_id: str,
     stop_index=-1,                # STOP_INDEX field will be set to this value
     adjacent_stop_ids=[],
     radius=200,
-    is_terminal=False
+    is_terminal=False,
 ) -> pd.DataFrame:
 
     # the "possible" arrivals include times when the bus passes stops in the opposite direction,
@@ -318,6 +323,7 @@ def get_possible_arrivals_for_stop(buses: pd.DataFrame, stop_id: str,
     all_time_values = eclipses['TIME'].values
     all_vid_values = eclipses['VID'].values
     all_obs_group_values = eclipses['OBS_GROUP'].values
+    all_trip_id_values = eclipses['TRIP_ID'].values
 
     if use_reported_direction:
         all_did_values = eclipses['DID'].values
@@ -356,7 +362,8 @@ def get_possible_arrivals_for_stop(buses: pd.DataFrame, stop_id: str,
             all_did_values[eclipse_start_index] if use_reported_direction else direction_id,
             stop_index,
             all_obs_group_values[eclipse_start_index],
-            -1
+            -1,
+            all_trip_id_values[eclipse_start_index]
         )
 
     return make_arrivals_frame([
@@ -924,7 +931,7 @@ def add_missing_arrivals_for_vehicle_direction(
                 return get_possible_arrivals_for_stop(gap_bus, gap_stop_id,
                     direction_id=direction_id,
                     stop_index=gap_stop_index,
-                    radius=300
+                    radius=300,
                 )
 
             gap_arrival = find_gap_arrival()
