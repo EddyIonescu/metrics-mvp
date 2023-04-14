@@ -267,7 +267,7 @@ def get_possible_arrivals_for_stop(buses: pd.DataFrame, stop_id: str,
     use_reported_direction=False, # if use_reported_direction is True, the DID field will have the reported value from the buses frame
     stop_index=-1,                # STOP_INDEX field will be set to this value
     adjacent_stop_ids=[],
-    radius=200,
+    radius=500, # Change from 200 to 500 due to suburban nature of the routes - higher speed means fewer points
     is_terminal=False,
 ) -> pd.DataFrame:
 
@@ -348,7 +348,8 @@ def get_possible_arrivals_for_stop(buses: pd.DataFrame, stop_id: str,
         # element 0 is the index of the arrival time
         # element -1 is the index of the departure time
         at_stop_indexes = np.nonzero(
-            distance_values <= ((min_dist + 75) if is_terminal else (min_dist + 25))
+            # Change from 75 for terminal and 25 for non-terminal due to suburban nature of the routes.
+            distance_values <= ((min_dist + 200) if is_terminal else (min_dist + 50))
         )[0]
 
         time_values = all_time_values[eclipse_start_index:eclipse_end_index]
@@ -931,7 +932,7 @@ def add_missing_arrivals_for_vehicle_direction(
                 return get_possible_arrivals_for_stop(gap_bus, gap_stop_id,
                     direction_id=direction_id,
                     stop_index=gap_stop_index,
-                    radius=300,
+                    radius=1000,
                 )
 
             gap_arrival = find_gap_arrival()
