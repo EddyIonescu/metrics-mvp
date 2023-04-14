@@ -17,7 +17,7 @@ spec:
             args: ["--start-date", "2023-04-10", "--agency", "brampton"]
             resources:
               requests:
-                cpu: 0.03
+                cpu: 0.5
             env:
               - name: OPENTRANSIT_AGENCY_IDS
                 valueFrom:
