@@ -239,7 +239,7 @@ def find_arrivals(agency: config.Agency, route_state: pd.DataFrame, route_config
                 adjacent_stop_ids=adjacent_stop_ids,
                 radius=radius,
                 is_terminal=is_terminal,
-                use_reported_direction=True, # note this was initially false
+                use_reported_direction=False,
             )
 
             possible_arrivals_arr.append(possible_arrivals)
