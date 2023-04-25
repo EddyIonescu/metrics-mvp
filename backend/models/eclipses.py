@@ -37,7 +37,7 @@ def resample_bus(bus: pd.DataFrame) -> pd.DataFrame:
         lat_values = bus['LAT'].values
         lon_values = bus['LON'].values
 
-        target_dist = 25
+        target_dist = 10 # was 25
 
         prev_time_values = np.r_[np.nan, time_values[:-1]]
         prev_lat_values = np.r_[np.nan, lat_values[:-1]]
@@ -208,7 +208,7 @@ def find_arrivals(agency: config.Agency, route_state: pd.DataFrame, route_config
             stop_info = route_config.get_stop_info(stop_id)
 
             is_terminal = False
-            radius = 200
+            radius = 400 # was 200
             adjacent_stop_ids = []
 
             is_terminal = (stop_index == 0) or (stop_index == num_dir_stops - 1)
@@ -267,7 +267,7 @@ def get_possible_arrivals_for_stop(buses: pd.DataFrame, stop_id: str,
     use_reported_direction=False, # if use_reported_direction is True, the DID field will have the reported value from the buses frame
     stop_index=-1,                # STOP_INDEX field will be set to this value
     adjacent_stop_ids=[],
-    radius=1000, # Change from 200 to 500 due to suburban nature of the routes - higher speed means fewer points
+    radius=800, # Change from 200 to 800 due to suburban nature of the routes - higher speed means fewer points
     is_terminal=False,
 ) -> pd.DataFrame:
 
@@ -350,7 +350,7 @@ def get_possible_arrivals_for_stop(buses: pd.DataFrame, stop_id: str,
         at_stop_indexes = np.nonzero(
             # Used to determine the arrival and departure times at a stop.
             # Change from 75 for terminal and 25 for non-terminal due to suburban nature of the routes.
-            distance_values <= ((min_dist + 100) if is_terminal else (min_dist + 25))
+            distance_values <= ((min_dist + 120) if is_terminal else (min_dist + 35))
         )[0]
 
         time_values = all_time_values[eclipse_start_index:eclipse_end_index]
