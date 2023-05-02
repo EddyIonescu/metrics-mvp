@@ -15,12 +15,12 @@ class DirectionInfo:
     def __init__(self, route, data):
         self.route = route
         self.id = data['id']
-        self.title = data['title']
+        self.title = data.get('title')
         #self.name = data['name']
         self.data = data
         self.gtfs_direction_id = data['gtfs_direction_id']
-        self.gtfs_shape_id = data['gtfs_shape_id']
-        self.stop_geometry = data['stop_geometry']
+        self.gtfs_shape_id = data.get('gtfs_shape_id')
+        self.stop_geometry = data.get('stop_geometry')
 
     def is_loop(self):
         return self.data.get('loop', False)
@@ -61,9 +61,9 @@ class RouteConfig:
         self.data = data
         self.id = data['id']
         self.title = data['title']
-        self.url = data['url']
-        self.type = data['type']
-        self.sort_order = data['sort_order']
+        self.url = data.get('url')
+        self.type = data.get('type')
+        self.sort_order = data.get('sort_order')
         self.gtfs_route_id = data['gtfs_route_id']
 
         self.dir_infos = {}
@@ -121,17 +121,17 @@ class RouteConfig:
             for s in direction['stops'] if s == stop_id
         ]
 
-def get_cache_path(agency_id, version=DefaultVersion):
-    return f'{util.get_data_dir()}/routes_{version}_{agency_id}.json'
+def get_cache_path(agency_id, version=DefaultVersion, date='2023-04-14'):
+    return f'{util.get_data_dir()}/routes_{version}_{agency_id}_{date}.json'
 
 def get_s3_path(agency_id, version=DefaultVersion):
     return f'routes/{version}/routes_{version}_{agency_id}.json.gz'
 
-def get_route_list(agency_id, version=DefaultVersion):
+def get_route_list(agency_id, version=DefaultVersion, date='2023-04-14'):
     if re.match('^[\w\-]+$', agency_id) is None:
         raise Exception(f"Invalid agency id: {agency_id}")
 
-    cache_path = get_cache_path(agency_id, version)
+    cache_path = get_cache_path(agency_id, version, date)
 
     def route_list_from_data(data):
         return [RouteConfig(agency_id, route) for route in data['routes']]
@@ -149,24 +149,13 @@ def get_route_list(agency_id, version=DefaultVersion):
     except FileNotFoundError as err:
         pass
 
-    s3_bucket = config.s3_bucket
-    s3_path = get_s3_path(agency_id, version)
-
-    s3_url = f"http://{s3_bucket}.s3.amazonaws.com/{s3_path}"
-
-    r = requests.get(s3_url)
-
-    if r.status_code == 404:
-        raise FileNotFoundError(f"{s3_url} not found")
-    if r.status_code == 403:
-        raise FileNotFoundError(f"{s3_url} not found or access denied")
-    if r.status_code != 200:
-        raise Exception(f"Error fetching {s3_url}: HTTP {r.status_code}: {r.text}")
-
+    r = requests.get(
+        f'https://trips-api.transify.ca/opentransit-route-config?agency={agency_id}&date={date}',
+    )
     data = r.json()
 
     if not 'routes' in data:
-        raise Exception("S3 object did not contain 'routes' key")
+        raise Exception("Routes object did not contain 'routes' key")
 
     with open(cache_path, mode='w', encoding='utf-8') as f:
         f.write(r.text)

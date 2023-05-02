@@ -10,18 +10,3 @@ js_properties:
   title: Brampton Transit
   initialMapCenter: { lat: 45.525, lng: -122.677 }
   initialMapZoom: 14
-custom_directions:
-  '501':
-    - id: "501"
-      gtfs_direction_id: "1"
-      included_stop_ids: ["4123","7076","4039","4044"]
-    - id: "501C"
-      gtfs_direction_id: "1"
-      included_stop_ids: ["8501","4039","4003"]
-  '501-325':
-    - id: "501"
-      gtfs_direction_id: "1"
-      included_stop_ids: ["4123","7076","4039","4044"]
-    - id: "501C"
-      gtfs_direction_id: "1"
-      included_stop_ids: ["8501","4039","4003"]
