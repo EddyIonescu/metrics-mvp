@@ -152,6 +152,7 @@ def get_route_list(agency_id, version=DefaultVersion, date='2023-04-14'):
     r = requests.get(
         f'https://trips-api.transify.ca/opentransit-route-config?agency={agency_id}&date={date}',
     )
+    print(f'Retrieved route config for {date} and {agency_id} from trips-api')
     data = r.json()
 
     if not 'routes' in data:
