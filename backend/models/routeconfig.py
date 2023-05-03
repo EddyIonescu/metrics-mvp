@@ -139,7 +139,7 @@ def get_route_list(agency_id, version=DefaultVersion, date='2023-04-14'):
     try:
         mtime = os.stat(cache_path).st_mtime
         now = time.time()
-        if now - mtime < 86400:
+        if now - mtime < 300: # Replace 1 day with 5 minutes for now   86400:
             with open(cache_path, mode='r', encoding='utf-8') as f:
                 data_str = f.read()
                 try:
@@ -173,6 +173,7 @@ def get_route_config(agency_id, route_id, version=DefaultVersion):
     return None
 
 def save_routes(agency_id, routes, save_to_s3=False):
+    return
     data_str = json.dumps({
         'version': DefaultVersion,
         'routes': [route.data for route in routes]
