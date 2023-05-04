@@ -568,7 +568,7 @@ def get_arrivals_with_ascending_stop_index(
 
     min_trip_length = min(3, num_stops)
     max_small_gap_index_diff = 5
-    max_large_gap_seconds = 300
+    max_large_gap_seconds = 600 # Change from 300 to 600 to include more terminal arrivals even if less accurate
     num_non_ascending_stop_indexes = 0
 
     def finish_trip():
