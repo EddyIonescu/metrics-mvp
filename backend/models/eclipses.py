@@ -688,7 +688,7 @@ def get_arrivals_with_ascending_stop_index(
             # as a heuristic that seems to work in practice without making things too slow,
             # finish the current trip if 4 rows are processed without being able to extend any possible sequences.
             # (SF Muni's 39-Coit sometimes has 3 rows with non-ascending stop indexes before another ascending stop index.)
-            if num_non_ascending_stop_indexes >= 3: # Change to 30 due to 501 rapidway branch  4:
+            if num_non_ascending_stop_indexes >= 5: # Change to 30 due to 501 rapidway branch  4:
                 finish_trip()
         else:
             num_non_ascending_stop_indexes = 0
