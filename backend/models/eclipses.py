@@ -567,7 +567,8 @@ def get_arrivals_with_ascending_stop_index(
     terminal_stop_index = num_stops if is_loop else (num_stops - 1) # never reaches terminal_stop_index for loop routes
 
     min_trip_length = min(3, num_stops)
-    max_small_gap_index_diff = 5
+    max_small_gap_index_diff = 30 # Change from 5 to 30 to account for different branches on the same route.
+    # Because the list of stops is one unified list per route, some trips will appear as skipping many stops.
     max_large_gap_seconds = 600 # Change from 300 to 600 to include more terminal arrivals even if less accurate
     num_non_ascending_stop_indexes = 0
 

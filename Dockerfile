@@ -7,7 +7,9 @@ COPY ./frontend /app/frontend
 WORKDIR /app/frontend
 CMD ["npm","start"]
 
-FROM python:3.7.16-slim-bullseye AS flask-dev
+FROM python:3.7.16-bullseye AS flask-dev
+RUN pip install cython
+RUN pip install numpy==1.16.1
 RUN mkdir -p /app/backend && \
     apt-get update && \
     apt-get install -y curl nano less sudo && \
