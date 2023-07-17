@@ -1,0 +1,12 @@
+id: go
+gtfs_url: https://assets.metrolinx.com/raw/upload/Documents/Metrolinx/Open%20Data/GO-GTFS.zip
+timezone_id: America/Toronto
+default_day_start_hour: 3
+route_id_gtfs_field: route_short_name
+stop_id_gtfs_field: stop_id
+use_route_gtfs_id: true
+has_trip_id: true
+js_properties:
+  title: GO Transit
+  initialMapCenter: { lat: 45.525, lng: -122.677 }
+  initialMapZoom: 14

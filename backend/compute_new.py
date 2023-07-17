@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    agencies = [config.get_agency(args.agency)] if args.agency is not None else config.agencies
+    agencies = config.get_agency(args.agency).split(',') if args.agency is not None else config.agencies
 
     s3_bucket = config.s3_bucket
 
