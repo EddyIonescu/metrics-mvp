@@ -127,7 +127,7 @@ def get_cache_path(agency_id, version=DefaultVersion, date='2023-04-14'):
 def get_s3_path(agency_id, version=DefaultVersion):
     return f'routes/{version}/routes_{version}_{agency_id}.json.gz'
 
-def get_route_list(agency_id, version=DefaultVersion, date='2023-04-14'):
+def get_route_list(agency_id, version=DefaultVersion, date='2023-07-17'):
     if re.match('^[\w\-]+$', agency_id) is None:
         raise Exception(f"Invalid agency id: {agency_id}")
 
