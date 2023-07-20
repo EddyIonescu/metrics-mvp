@@ -1,0 +1,12 @@
+id: peterborough
+gtfs_url: http://pt.mapstrat.com/current/google_transit.zip
+timezone_id: America/Toronto
+default_day_start_hour: 3
+route_id_gtfs_field: route_short_name
+stop_id_gtfs_field: stop_id
+use_route_gtfs_id: true
+has_trip_id: true
+js_properties:
+  title: Peterborough Transit
+  initialMapCenter: { lat: 45.525, lng: -122.677 }
+  initialMapZoom: 14
