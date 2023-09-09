@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: compute-new
 spec:
-  schedule: "0 * * * *"
+  schedule: "0 0 * * *"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -14,7 +14,7 @@ spec:
             image: gcr.io/busviz/metrics-flask:latest
             imagePullPolicy: Always
             command: ["python",  "compute_new.py"]
-            args: ["--start-date", "2023-05-01"]
+            args: ["--start-date", "2023-05-10"]
             resources:
               requests:
                 cpu: 0.5
