@@ -1,4 +1,5 @@
 import os, re, yaml, pytz
+from datetime import date
 
 trynapi_url = os.environ.get("TRYNAPI_URL", "http://tryn-api")
 
@@ -67,9 +68,9 @@ class Agency:
         from . import routeconfig
         return routeconfig.get_route_list(self.id)
 
-    def get_route_config(self, route_id):
+    def get_route_config(self, route_id, d: date):
         from . import routeconfig
-        return routeconfig.get_route_config(self.id, route_id)
+        return routeconfig.get_route_config(self.id, route_id, d)
 
 class NextbusAgency(Agency):
     def __init__(self, conf):

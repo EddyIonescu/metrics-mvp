@@ -1,5 +1,6 @@
 import re, os, time, requests, json, boto3, gzip
 from . import util, config
+from datetime import date
 
 DefaultVersion = 'v3a'
 
@@ -121,17 +122,17 @@ class RouteConfig:
             for s in direction['stops'] if s == stop_id
         ]
 
-def get_cache_path(agency_id, version=DefaultVersion, date='2023-04-14'):
-    return f'{util.get_data_dir()}/routes_{version}_{agency_id}_{date}.json'
+def get_cache_path(agency_id, d: date, version=DefaultVersion):
+    return f'{util.get_data_dir()}/routes_{version}_{agency_id}_{d.isoformat()}.json'
 
 def get_s3_path(agency_id, version=DefaultVersion):
     return f'routes/{version}/routes_{version}_{agency_id}.json.gz'
 
-def get_route_list(agency_id, version=DefaultVersion, date='2023-07-17'):
+def get_route_list(agency_id, d: date, version=DefaultVersion):
     if re.match('^[\w\-]+$', agency_id) is None:
         raise Exception(f"Invalid agency id: {agency_id}")
 
-    cache_path = get_cache_path(agency_id, version, date)
+    cache_path = get_cache_path(agency_id, d, version)
 
     def route_list_from_data(data):
         return [RouteConfig(agency_id, route) for route in data['routes']]
@@ -150,9 +151,9 @@ def get_route_list(agency_id, version=DefaultVersion, date='2023-07-17'):
         pass
 
     r = requests.get(
-        f'https://trips-api.transify.ca/opentransit-route-config?agency={agency_id}&date={date}',
+        f'https://trips-api.transify.ca/opentransit-route-config?agency={agency_id}&date={d.isoformat()}',
     )
-    print(f'Retrieved route config for {date} and {agency_id} from trips-api')
+    print(f'Retrieved route config for {d.isoformat()} and {agency_id} from trips-api')
     data = r.json()
 
     if not 'routes' in data:
@@ -163,9 +164,9 @@ def get_route_list(agency_id, version=DefaultVersion, date='2023-07-17'):
 
     return route_list_from_data(data)
 
-def get_route_config(agency_id, route_id, version=DefaultVersion):
+def get_route_config(agency_id, route_id, d: date, version=DefaultVersion):
     use_gtfs_route_id = config.get_agency(agency_id).use_route_gtfs_id
-    for route in get_route_list(agency_id, version):
+    for route in get_route_list(agency_id, d, version):
         if use_gtfs_route_id and route.gtfs_route_id == route_id:
             return route
         if route.id == route_id:

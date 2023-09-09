@@ -32,7 +32,7 @@ if __name__ == '__main__':
     start_time_str = args.start_time
     end_time_str = args.end_time
 
-    route_config = agency.get_route_config(route_id)
+    route_config = agency.get_route_config(route_id, d)
 
     tz = agency.tz
 

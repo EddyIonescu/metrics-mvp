@@ -30,7 +30,7 @@ def compute_arrivals_for_date_and_start_hour(d: date, start_hour: int,
             print(f'no state for route {route_id}')
             continue
 
-        route_config = agency.get_route_config(route_id)
+        route_config = agency.get_route_config(route_id, d)
         # Always save route data with the OpenTransit route ID, rather than the GTFS one that
         # had to be consistent with the GTFS-RT data.
         opentransit_route_id = route_config.id

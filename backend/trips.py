@@ -39,7 +39,7 @@ if __name__ == '__main__':
     start_time_str = args.start_time
     end_time_str = args.end_time
 
-    route_config = agency.get_route_config(route_id)
+    route_config = agency.get_route_config(route_id, d)
 
     s1_info = route_config.get_stop_info(s1)
     s1_dirs = route_config.get_directions_for_stop(s1)

@@ -267,7 +267,7 @@ def compute_stats(d: date, agency: config.Agency, routes, scheduled=False, save_
 
         t1 = time.time()
 
-        route_config = agency.get_route_config(route_id)
+        route_config = agency.get_route_config(route_id, d)
 
         if not scheduled:
             try:

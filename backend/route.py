@@ -52,7 +52,7 @@ if __name__ == '__main__':
     def render_distance(dist):
         return '----' if np.isnan(dist) else ('%3dm' % dist)
 
-    route_config = agency.get_route_config(route_id)
+    route_config = agency.get_route_config(route_id, d)
     if route_config is None:
         raise Exception(f"Invalid route {route_id}")
 

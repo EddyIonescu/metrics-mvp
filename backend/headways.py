@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     direction_id = args.dir
 
-    route_config = agency.get_route_config(route_id)
+    route_config = agency.get_route_config(route_id, d)
 
     stop_info = route_config.get_stop_info(stop_id)
     if stop_info is None:

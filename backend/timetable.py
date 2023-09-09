@@ -37,7 +37,7 @@ if __name__ == "__main__":
     print(f"Start: {start_time}")
 
     timetable = timetables.get_by_date(agency_id, route_id, d)
-    route_config = agency.get_route_config(route_id)
+    route_config = agency.get_route_config(route_id, d)
 
     tz = agency.tz
 
