@@ -64,9 +64,9 @@ class Agency:
 
         self.conf = conf
 
-    def get_route_list(self):
+    def get_route_list(self, d: date):
         from . import routeconfig
-        return routeconfig.get_route_list(self.id)
+        return routeconfig.get_route_list(self.id, d)
 
     def get_route_config(self, route_id, d: date):
         from . import routeconfig

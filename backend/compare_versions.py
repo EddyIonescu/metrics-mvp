@@ -33,6 +33,7 @@ if __name__ == '__main__':
 
     route_ids = args.route
     if route_ids is None:
+        # Broken method-call
         route_ids = [route.id for route in agency.get_route_list()]
 
     date_str = args.date

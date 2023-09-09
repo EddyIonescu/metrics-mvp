@@ -99,10 +99,9 @@ if __name__ == '__main__':
         raise Exception('missing date, start-date, or end-date')
 
     for agency in agencies:
-        if args.agency is not None and args.route is not None:
-            route_ids = args.route
-        else:
-            route_ids = [route.id for route in agency.get_route_list()]
-
         for d in dates:
+            if args.agency is not None and args.route is not None:
+                route_ids = args.route
+            else:
+                route_ids = [route.id for route in agency.get_route_list(d)]
             compute_arrivals(d, agency, route_ids, args.s3)

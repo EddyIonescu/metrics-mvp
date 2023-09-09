@@ -316,12 +316,10 @@ def compute_stats(d: date, agency: config.Agency, routes, scheduled=False, save_
             precomputed_stats.save_stats(agency.id, stat_id, d, start_time_str, end_time_str, scheduled=scheduled, data=data, save_to_s3=save_to_s3)
 
 def compute_stats_for_dates(dates, agency: config.Agency, scheduled=False, save_to_s3=True):
-
-    routes = agency.get_route_list()
-
     if scheduled:
         computed_date_keys = {}
         for d in dates:
+            routes = agency.get_route_list(d)
             date_key = timetables.get_date_key(agency.id, d)
             if date_key not in computed_date_keys:
                 computed_date_keys[date_key] = True
@@ -329,6 +327,7 @@ def compute_stats_for_dates(dates, agency: config.Agency, scheduled=False, save_
                 compute_stats(schedule_date, agency, routes, scheduled=True, save_to_s3=save_to_s3)
     else:
         for d in dates:
+            routes = agency.get_route_list(d)
             compute_stats(d, agency, routes, scheduled=False, save_to_s3=save_to_s3)
 
 if __name__ == '__main__':

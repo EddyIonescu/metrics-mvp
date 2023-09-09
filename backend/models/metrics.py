@@ -646,6 +646,7 @@ class AgencyMetrics:
     def get_route_configs(self):
         if self.route_configs is None:
             self.route_configs = {}
+            # Broken method-call
             for route in routeconfig.get_route_list(self.agency_id):
                 self.route_configs[route.id] = route
         return self.route_configs

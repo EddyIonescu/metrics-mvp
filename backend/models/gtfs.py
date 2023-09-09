@@ -296,7 +296,8 @@ class GtfsScraper:
         trips_df = self.get_gtfs_trips()
 
         gtfs_route_id_map = {}
-
+        # Broken method-call
+        # Note - gtfs.py is deprecated - look into removing.
         route_configs = routeconfig.get_route_list(self.agency_id) # todo: use route config from parsing this GTFS file (will eventually be needed to process old GTFS feeds)
         for route_config in route_configs:
             gtfs_route_id_map[route_config.gtfs_route_id] = route_config

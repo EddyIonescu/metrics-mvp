@@ -10,6 +10,7 @@ if __name__ == '__main__':
 
     agency = config.get_agency(args.agency)
 
+    # Broken method-call
     routes = agency.get_route_list()
 
     for route in routes:

@@ -54,7 +54,7 @@ if __name__ == '__main__':
         else:
             raise Exception(f"No compute state for agency {agency_id}, use --start-date parameter the first time")
 
-        routes = agency.get_route_list()
+        routes = agency.get_route_list(d)
         route_ids = [
             route.gtfs_route_id if agency.use_route_gtfs_id else route.id
             for route in routes

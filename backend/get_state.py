@@ -34,6 +34,7 @@ if __name__ == '__main__':
         local_start = util.get_localized_datetime(d, start_time_str, tz)
         local_end = util.get_localized_datetime(d, end_time_str, tz)
 
+        # Broken method-call
         if args.route is None:
             route_ids = [route.id for route in agency.get_route_list()]
         else:
