@@ -54,12 +54,6 @@ if __name__ == '__main__':
         else:
             raise Exception(f"No compute state for agency {agency_id}, use --start-date parameter the first time")
 
-        routes = agency.get_route_list(d)
-        route_ids = [
-            route.gtfs_route_id if agency.use_route_gtfs_id else route.id
-            for route in routes
-        ]
-
         tz = agency.tz
 
         now = datetime.now(tz)
@@ -69,6 +63,11 @@ if __name__ == '__main__':
             today -= timedelta(days=1)
 
         while d <= today:
+            routes = agency.get_route_list(d)
+            route_ids = [
+                route.gtfs_route_id if agency.use_route_gtfs_id else route.id
+                for route in routes
+            ]
             compute_start_time = datetime.now(tz)
 
             print(f'computing arrivals for {d}')

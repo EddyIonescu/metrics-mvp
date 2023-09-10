@@ -14,10 +14,10 @@ spec:
             image: gcr.io/busviz/metrics-flask:latest
             imagePullPolicy: Always
             command: ["python",  "compute_new.py"]
-            args: ["--start-date", "2023-05-10"]
+            args: ["--start-date", "2023-09-05"]
             resources:
               requests:
-                cpu: 0.5
+                cpu: 2.0
             env:
               - name: OPENTRANSIT_AGENCY_IDS
                 valueFrom:
