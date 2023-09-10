@@ -171,6 +171,7 @@ def get_route_config(agency_id, route_id, d: date, version=DefaultVersion):
             return route
         if route.id == route_id:
             return route
+    print(f'Could not find route_config for {route_id} on {d.isoformat()} at {agency_id}')
     return None
 
 def save_routes(agency_id, routes, save_to_s3=False):
