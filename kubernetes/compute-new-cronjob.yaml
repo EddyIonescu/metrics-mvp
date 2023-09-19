@@ -14,7 +14,7 @@ spec:
             image: gcr.io/busviz/metrics-flask:latest
             imagePullPolicy: Always
             command: ["python",  "compute_new.py"]
-            args: ["--start-date", "2023-09-05"]
+            args: ["--start-date", "2023-09-15"]
             resources:
               requests:
                 cpu: 2.0

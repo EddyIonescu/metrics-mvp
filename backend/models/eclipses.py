@@ -208,7 +208,7 @@ def find_arrivals(agency: config.Agency, route_state: pd.DataFrame, route_config
             stop_info = route_config.get_stop_info(stop_id)
 
             is_terminal = False
-            radius = 400 # was 200
+            radius = 600 # was 200
             adjacent_stop_ids = []
 
             is_terminal = (stop_index == 0) or (stop_index == num_dir_stops - 1)
@@ -228,7 +228,7 @@ def find_arrivals(agency: config.Agency, route_state: pd.DataFrame, route_config
                 # set radius to be no larger than the distance to the previous/next stop.
                 # this helps avoid odd results near the terminals of certain routes
                 distance_to_adjacent_stop = util.haver_distance(stop_info.lat, stop_info.lon, adjacent_stop_info.lat, adjacent_stop_info.lon)
-                radius = min(radius, round(distance_to_adjacent_stop))
+                radius = min(radius, round(distance_to_adjacent_stop*0.8))
 
             #dirs_text = [f'{d}[{i}]' for d, i in zip(stop_direction_ids, stop_indexes)]
             #print(f"{route_id}: {round(time.time() - t0, 1)} computing arrivals at stop {stop_id} {','.join(dirs_text)}  radius {radius} m  {'(terminal)' if is_terminal else ''}")
@@ -267,7 +267,7 @@ def get_possible_arrivals_for_stop(buses: pd.DataFrame, stop_id: str,
     use_reported_direction=False, # if use_reported_direction is True, the DID field will have the reported value from the buses frame
     stop_index=-1,                # STOP_INDEX field will be set to this value
     adjacent_stop_ids=[],
-    radius=800, # Change from 200 to 800 due to suburban nature of the routes - higher speed means fewer points
+    radius=600, # Change from 200 to 800 due to suburban nature of the routes - higher speed means fewer points
     is_terminal=False,
 ) -> pd.DataFrame:
 
@@ -350,7 +350,7 @@ def get_possible_arrivals_for_stop(buses: pd.DataFrame, stop_id: str,
         at_stop_indexes = np.nonzero(
             # Used to determine the arrival and departure times at a stop.
             # Change from 75 for terminal and 25 for non-terminal due to suburban nature of the routes.
-            distance_values <= ((min_dist + 120) if is_terminal else (min_dist + 35))
+            distance_values <= ((min_dist + 150) if is_terminal else (min_dist + 50))
         )[0]
 
         time_values = all_time_values[eclipse_start_index:eclipse_end_index]
@@ -567,7 +567,7 @@ def get_arrivals_with_ascending_stop_index(
     terminal_stop_index = num_stops if is_loop else (num_stops - 1) # never reaches terminal_stop_index for loop routes
 
     min_trip_length = min(3, num_stops)
-    max_small_gap_index_diff = 30 # Change from 5 to 30 to account for different branches on the same route.
+    max_small_gap_index_diff = 35 # Change from 5 to 30 to account for different branches on the same route.
     # Because the list of stops is one unified list per route, some trips will appear as skipping many stops.
     max_large_gap_seconds = 600 # Change from 300 to 600 to include more terminal arrivals even if less accurate
     num_non_ascending_stop_indexes = 0
