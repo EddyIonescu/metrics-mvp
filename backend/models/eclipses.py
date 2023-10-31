@@ -6,7 +6,7 @@ from . import routeconfig, util, config
 
 
 def resample_bus(bus: pd.DataFrame) -> pd.DataFrame:
-
+    
     time_diffs = np.diff(bus['TIME'].values, prepend=0)
 
     # remove duplicates (positions are observed every 15 seconds, but usually only update every minute or so)

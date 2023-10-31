@@ -25,7 +25,7 @@ class CachedState:
         buses = pd.read_csv(
                 cache_path,
                 dtype={
-                    'vid': str,
+                'vid': str,
                     'did': str,
                     'tripId': str,
                 },
