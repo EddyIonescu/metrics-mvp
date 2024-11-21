@@ -1,0 +1,12 @@
+id: metro-mn
+gtfs_url: https://svc.metrotransit.org/mtgtfs/archive/gtfs20241102.zip
+timezone_id: America/Chicago
+default_day_start_hour: 3
+route_id_gtfs_field: route_short_name
+stop_id_gtfs_field: stop_code
+use_route_gtfs_id: false # Should be true before 2023-10-28
+has_trip_id: true
+js_properties:
+  title: Metro Transit
+  initialMapCenter: { lat: 45.525, lng: -122.677 }
+  initialMapZoom: 14
