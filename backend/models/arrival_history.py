@@ -159,7 +159,7 @@ def get_cache_path(agency_id: str, route_id: str, d: date, version = DefaultVers
     if re.match('^[\w\-]+$', agency_id) is None:
         raise Exception(f"Invalid agency id: {agency_id}")
 
-    if re.match('^[\w\-]+$', route_id) is None:
+    if re.match('^[\w\- ]+$', route_id) is None:
         raise Exception(f"Invalid route id: {route_id}")
 
     if re.match('^[\w\-]+$', date_str) is None:
@@ -233,7 +233,6 @@ def save_for_date(history: ArrivalHistory, d: date, s3=False):
         f.write(data_str)
 
     if s3:
-        s3 = boto3.resource('s3')
         s3_path = get_s3_path(agency_id, route_id, d, version)
         s3_bucket = config.s3_bucket
         print(f'saving to s3://{s3_bucket}/{s3_path}')

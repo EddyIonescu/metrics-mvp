@@ -37,7 +37,7 @@ def resample_bus(bus: pd.DataFrame) -> pd.DataFrame:
         lat_values = bus['LAT'].values
         lon_values = bus['LON'].values
 
-        target_dist = 10 # was 25
+        target_dist = 25
 
         prev_time_values = np.r_[np.nan, time_values[:-1]]
         prev_lat_values = np.r_[np.nan, lat_values[:-1]]
@@ -73,6 +73,7 @@ def resample_bus(bus: pd.DataFrame) -> pd.DataFrame:
             num_samples_i = int(num_samples_values[i])
             dt_i = dt_values[i]
 
+            # Adds interpolation only if less than 3-minutes passed between observations
             if num_samples_i > 1 and num_samples_i < 100 and dt_i < 180:
                 prev_lat_i = prev_lat_values[i]
                 prev_lon_i = prev_lon_values[i]
@@ -117,6 +118,21 @@ def resample_bus(bus: pd.DataFrame) -> pd.DataFrame:
         'VID','DID','LAT','LON','TIME','OBS_GROUP','TRIP_ID',
         # 'INTERP' # whether a sample was interpolated isn't needed by algorithm, but useful for debugging
     ])
+
+    # Remove any rows where LAT or LON are 0
+    resampled_bus = resampled_bus[(resampled_bus['LAT'] != 0) & (resampled_bus['LON'] != 0)]
+
+    # Export resampled data for VID 1880 to CSV for debugging
+    if len(resampled_bus[resampled_bus['VID'] == '1880']) > 0:
+        debug_df = resampled_bus[resampled_bus['VID'] == '1880'].copy()
+        timestamp = pd.to_datetime(debug_df['TIME'], unit='s').dt.tz_localize('UTC').dt.tz_convert('US/Eastern')
+        debug_df['Date'] = timestamp.dt.strftime('%Y-%m-%d')
+        debug_df['Time'] = timestamp.dt.strftime('%H:%M:%S')
+        # debug_df = debug_df[debug_df['TRIP_ID'] == '24497580-250428-MULTI-Weekday-01']
+        # Only keep LAT, LON, TIME, Time, and TRIP_ID columns, and limit to first 855 rows
+        debug_df = debug_df[['LAT', 'LON', 'TIME', 'Time', 'TRIP_ID']]
+        debug_df.to_csv('resampled_bus_1880.csv', index=False)
+        
     resampled_bus['TIME'] = resampled_bus['TIME'].astype(np.int64)
 
     return resampled_bus
@@ -249,6 +265,9 @@ def find_arrivals(agency: config.Agency, route_state: pd.DataFrame, route_config
 
     possible_arrivals = concat_possible_arrivals()
 
+    print(possible_arrivals[possible_arrivals['TIME'] > 1758657118])
+    
+
     if possible_arrivals.empty:
         arrivals, num_trips = possible_arrivals, 0
     else:
@@ -257,8 +276,9 @@ def find_arrivals(agency: config.Agency, route_state: pd.DataFrame, route_config
         arrivals = clean_arrivals(possible_arrivals, buses, route_config)
 
         num_trips = len(np.unique(arrivals['TRIP'].values))
+        num_gtfs_trips = len(np.unique(arrivals['TRIP_ID'].values))
 
-    print(f"{route_id}: {round(time.time() - t0, 1)} found {len(arrivals['TIME'].values)} arrivals in {num_trips} trips")
+    print(f"{route_id}: {round(time.time() - t0, 1)} found {len(arrivals['TIME'].values)} arrivals in {num_trips} trips and {num_gtfs_trips} GTFS trips")
 
     return arrivals
 
@@ -588,7 +608,7 @@ def get_arrivals_with_ascending_stop_index(
                     longest_sequence = sequence
 
         num_non_ascending_stop_indexes = 0
-
+        print(sequence.num_loops, 'loops')
         if longest_sequence is not None:
 
             if len(longest_sequence.row_indexes) >= min_trip_length:
@@ -647,6 +667,14 @@ def get_arrivals_with_ascending_stop_index(
                 trip_time = arrival_time - sequence.last_departure_time
 
                 if is_loop and index_diff < 0:
+                    # Check if we're wrapping around AND the GTFS-RT TripID (if provided) changed
+                    trip_id_values = dir_arrivals['TRIP_ID'].values
+                    current_trip_id = trip_id_values[row_index] if row_index < len(trip_id_values) else None
+                    start_trip_id = trip_id_values[sequence.row_indexes[0]] if len(sequence.row_indexes) > 0 and sequence.row_indexes[0] < len(trip_id_values) else None
+                    if current_trip_id and start_trip_id and current_trip_id != start_trip_id:
+                        print(f'Completing a loop: TRIP_ID changed from {start_trip_id} to {current_trip_id}')
+                        finish_trip()
+                        continue  # Skip to next iteration after finishing trip
                     # make sure that index_diff is non-negative for loops so that
                     # we continue appending to the same trip after completing a loop
                     index_diff = (index_diff + num_stops) % num_stops

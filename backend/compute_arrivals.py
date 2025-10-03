@@ -45,6 +45,8 @@ def compute_arrivals_for_date_and_start_hour(d: date, start_hour: int,
 
         arrival_history.save_for_date(history, d, save_to_s3)
 
+        arrivals_df.to_csv(f'{opentransit_route_id}_{d}.csv')
+
         print(f'{opentransit_route_id}: {round(time.time()-t1,2)} done')
 
 def compute_arrivals(d: date, agency: config.Agency, route_ids: list, save_to_s3=True):

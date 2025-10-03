@@ -149,7 +149,7 @@ def validate_agency_id(agency_id: str):
 def validate_agency_route_path_attributes(agency_id: str, route_id: str):
     validate_agency_id(agency_id)
 
-    if re.match('^[\w\-]+$', route_id) is None:
+    if re.match('^[\w\- ]+$', route_id) is None:
         raise Exception(f"Invalid route id: {route_id}")
 
 def get_state_cache_dir(agency_id):
@@ -308,11 +308,13 @@ def get_state_raw(agency_id, start_time, end_time, route_ids):
     print(params)
 
     query_url = f"{trynapi_url}/graphql?query={query}"
+    print(query_url)
     try:
         r = requests.get(query_url)
     except Exception as exc:
         print(exc)
         print('Ensure tryn-api is running and that you set the TRYNAPI_URL environment variable')
+        print('Use http://host.docker.internal:4000 for connections from a docker container')
         exit(1)
 
     print(f"   response length = {len(r.text)}")
