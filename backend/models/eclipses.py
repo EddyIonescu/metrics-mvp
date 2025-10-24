@@ -819,10 +819,15 @@ def get_arrivals_with_ascending_stop_index(
                                 # In this case, the one with the smallest last_stop_index for a particular length
                                 # isn't necessarily the best one, since it may contain more loops than another sequence.
                                 # To handle this case, add the total number of stops in each loop for each sequence.
-                                total_stops = num_stops * sequence.num_loops + last_stop_index
-                                best_total_stops = num_stops * best_sequence.num_loops + best_sequence.last_stop_index
+                                # Skip comparison if either sequence has None for last_stop_index (empty sequence)
+                                if last_stop_index is not None and best_sequence.last_stop_index is not None:
+                                    total_stops = num_stops * sequence.num_loops + last_stop_index
+                                    best_total_stops = num_stops * best_sequence.num_loops + best_sequence.last_stop_index
 
-                                if total_stops < best_total_stops:
+                                    if total_stops < best_total_stops:
+                                        smallest_last_index_keys_by_length[seq_len] = sequence_key
+                                elif last_stop_index is not None:
+                                    # Current sequence has data but best doesn't, prefer current
                                     smallest_last_index_keys_by_length[seq_len] = sequence_key
 
                 unneded_sequence_keys = set(possible_sequences.keys()) - set(smallest_last_index_keys_by_length.values())
