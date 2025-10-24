@@ -216,7 +216,7 @@ def get_by_date(agency_id: str, route_id: str, d: date, version = DefaultVersion
 
     return ArrivalHistory.from_data(data)
 
-def save_for_date(history: ArrivalHistory, d: date, s3=False):
+def save_for_date(history: ArrivalHistory, d: date, save_to_s3=False):
     data_str = json.dumps(history.get_data())
 
     version = history.version
@@ -232,7 +232,8 @@ def save_for_date(history: ArrivalHistory, d: date, s3=False):
     with open(cache_path, "w") as f:
         f.write(data_str)
 
-    if s3:
+    if save_to_s3:
+        s3 = boto3.resource('s3')
         s3_path = get_s3_path(agency_id, route_id, d, version)
         s3_bucket = config.s3_bucket
         print(f'saving to s3://{s3_bucket}/{s3_path}')

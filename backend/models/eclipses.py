@@ -278,7 +278,7 @@ def find_arrivals(agency: config.Agency, route_state: pd.DataFrame, route_config
         num_trips = len(np.unique(arrivals['TRIP'].values))
         num_gtfs_trips = len(np.unique(arrivals['TRIP_ID'].values))
 
-    print(f"{route_id}: {round(time.time() - t0, 1)} found {len(arrivals['TIME'].values)} arrivals in {num_trips} trips and {num_gtfs_trips} GTFS trips")
+        print(f"{route_id}: {round(time.time() - t0, 1)} found {len(arrivals['TIME'].values)} arrivals in {num_trips} trips and {num_gtfs_trips} GTFS trips")
 
     return arrivals
 
