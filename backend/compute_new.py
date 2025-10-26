@@ -64,6 +64,12 @@ if __name__ == '__main__':
 
         while d <= today:
             routes = agency.get_route_list(d)
+
+            if routes is None:
+                print(f'Skipping {d} - could not fetch route config')
+                d += timedelta(days=1)
+                continue
+
             route_ids = [
                 route.gtfs_route_id if agency.use_route_gtfs_id else route.id
                 for route in routes

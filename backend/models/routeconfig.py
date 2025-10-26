@@ -154,10 +154,27 @@ def get_route_list(agency_id, d: date, version=DefaultVersion):
         f'https://trips-api.transify.ca/opentransit-route-config?agency={agency_id}&date={d.isoformat()}',
     )
     print(f'Retrieved route config for {d.isoformat()} and {agency_id} from trips-api')
-    data = r.json()
+
+    # Check response status and content before parsing JSON
+    if r.status_code != 200:
+        print(f"Warning: Error fetching route config: HTTP {r.status_code}: {r.text}")
+        return None
+
+    if not r.text:
+        print(f"Warning: Empty response from trips-api for agency {agency_id} on {d.isoformat()}")
+        return None
+
+    try:
+        data = r.json()
+    except json.JSONDecodeError as e:
+        print(f"Warning: Failed to parse JSON response for {agency_id} on {d.isoformat()}")
+        print(f"Response status code: {r.status_code}")
+        print(f"Response text (first 500 chars): {r.text[:500]}")
+        return None
 
     if not 'routes' in data:
-        raise Exception("Routes object did not contain 'routes' key")
+        print(f"Warning: Routes object did not contain 'routes' key for {agency_id} on {d.isoformat()}")
+        return None
 
     with open(cache_path, mode='w', encoding='utf-8') as f:
         f.write(r.text)
