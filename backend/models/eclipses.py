@@ -592,7 +592,7 @@ def get_arrivals_with_ascending_stop_index(
     max_large_gap_seconds = 600 # Change from 300 to 600 to include more terminal arrivals even if less accurate
     num_non_ascending_stop_indexes = 0
 
-    def finish_trip():
+    def finish_trip(reset_row_index=True):
         nonlocal row_index, next_trip, num_non_ascending_stop_indexes
 
         longest_sequence = None
@@ -608,7 +608,7 @@ def get_arrivals_with_ascending_stop_index(
                     longest_sequence = sequence
 
         num_non_ascending_stop_indexes = 0
-        print(sequence.num_loops, 'loops')
+        # print(sequence.num_loops, 'loops')
         if longest_sequence is not None:
 
             if len(longest_sequence.row_indexes) >= min_trip_length:
@@ -633,7 +633,10 @@ def get_arrivals_with_ascending_stop_index(
             # loop may have continued a few rows past the end of the longest sequence.
             # in this case we back up the loop so it doesn't skip any rows
             # (row_index will be incremented once after this)
-            row_index = longest_sequence.row_indexes[-1]
+            # When called from trip ID change detection, we don't want to reset row_index
+            # because we want to continue processing from the current row as the start of the new trip
+            if reset_row_index:
+                row_index = longest_sequence.row_indexes[-1]
 
             reset_possible_sequences()
 
@@ -672,9 +675,14 @@ def get_arrivals_with_ascending_stop_index(
                     current_trip_id = trip_id_values[row_index] if row_index < len(trip_id_values) else None
                     start_trip_id = trip_id_values[sequence.row_indexes[0]] if len(sequence.row_indexes) > 0 and sequence.row_indexes[0] < len(trip_id_values) else None
                     if current_trip_id and start_trip_id and current_trip_id != start_trip_id:
-                        print(f'Completing a loop: TRIP_ID changed from {start_trip_id} to {current_trip_id}')
-                        finish_trip()
-                        continue  # Skip to next iteration after finishing trip
+                        # print(f'Completing a loop: TRIP_ID changed from {start_trip_id} to {current_trip_id}')
+                        # Finish the previous trip without resetting row_index, so we can process
+                        # the current row as the first stop of the new trip
+                        finish_trip(reset_row_index=False)
+                        # Continue processing this row with the freshly reset sequences
+                        # Re-initialize to process current row with fresh sequences
+                        new_sequences = {}
+                        updated_sequences = False
                     # make sure that index_diff is non-negative for loops so that
                     # we continue appending to the same trip after completing a loop
                     index_diff = (index_diff + num_stops) % num_stops
@@ -819,7 +827,7 @@ def get_arrivals_with_ascending_stop_index(
                                 # In this case, the one with the smallest last_stop_index for a particular length
                                 # isn't necessarily the best one, since it may contain more loops than another sequence.
                                 # To handle this case, add the total number of stops in each loop for each sequence.
-                                # Skip comparison if either sequence has None for last_stop_index (empty sequence)
+                                # Skip comparison if either sequence has pNone for last_stop_index (empty sequence)
                                 if last_stop_index is not None and best_sequence.last_stop_index is not None:
                                     total_stops = num_stops * sequence.num_loops + last_stop_index
                                     best_total_stops = num_stops * best_sequence.num_loops + best_sequence.last_stop_index
